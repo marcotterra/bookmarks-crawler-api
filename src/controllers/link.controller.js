@@ -36,7 +36,7 @@ class LinkController {
   }
 
   update(req, res) {
-    return this.Link.fidByIdAndUpdate(req.params.id, req.body, {
+    return this.Link.findByIdAndUpdate(req.params.id, req.body, {
       new: true
     })
       .then(response => {
@@ -50,11 +50,11 @@ class LinkController {
   }
 
   remove(req, res) {
-    return this.Link.fidByIdAndRemove(req.params.id)
+    return this.Link.findByIdAndRemove(req.params.id)
       .then(response => {
         response === null
-          ? res.status(404).json({ message: "Link not found" })
-          : res.json(response);
+          ? res.status(404).json({ message: "Link not found" }) // eslint-disable-next-line
+          : res.json({ message: `Link '${response.title}' was deleted with success` });
       })
       .catch(error => {
         res.status(422).json({ message: error.message });
