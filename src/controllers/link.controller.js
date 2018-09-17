@@ -1,3 +1,5 @@
+import { parseMetadata } from "../middleware/metadata-parser";
+
 class LinkController {
   constructor(model) {
     this.Link = model;
@@ -25,8 +27,21 @@ class LinkController {
       });
   }
 
-  create(req, res) {
-    return this.Link.create(req.body)
+  async create(req, res) {
+    const { image, publisher, title, description, logo } = await parseMetadata(
+      req.body.url
+    );
+
+    const linkData = {
+      image,
+      publisher,
+      title,
+      description,
+      logo,
+      url: req.body.url
+    };
+
+    return this.Link.create(linkData)
       .then(response => {
         res.status(201).json(response);
       })
